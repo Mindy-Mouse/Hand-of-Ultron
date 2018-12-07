@@ -22,7 +22,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 @Autonomous(name="pray", group="Exercises")
-//@Disabled
 public class pray extends LinearOpMode
 {
     DcMotor             LeftFrontWheels = null;
