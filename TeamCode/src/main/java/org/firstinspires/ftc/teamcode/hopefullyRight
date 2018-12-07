@@ -64,7 +64,7 @@ public class hopefullyRight extends OpMode {
 
         double leftPower;
         double rightPower;
-        double outtakePower;
+        double liftPower = 0.5;
 
         leftPower  = gamepad1.left_stick_y;
         rightPower = gamepad1.right_stick_y;
@@ -76,21 +76,51 @@ public class hopefullyRight extends OpMode {
             RightBackWheels.setPower(rightPower);
         }
         /*
-        out lift up and down - 2
+        out lift up and down - 2 :)
         outtake pivot - 1 2 maybe
-        intake in and out - 2
-        paddles - 1
-        intake tilt up and down - 2
+        intake in and out - 2 :)
+        paddles - 1 :)
+        intake tilt up and down - 2 :)
         */
-        //if(gamepad1.){
-            
-       //}
+        //moving outtake box up and down
+       if(gamepad1.a){
+            outLift.setPower(liftPower);
+       }
+       if(gamepad1.b){
+            outLift.setPower(-liftPower);
+       }
+       
+       //tilting intake box up and down
+       if(gamepad1.dpad_down){
+            while(runtime < 2){
+                inTilt.setPower(liftPower/3);
+                inLift.setPower(liftPower);
+               // sleep(100);
+            }
+       }
+       if(gamepad1.dpad_up){
+            inTilt.setPower(-liftPower);
+       }
+       
+       //spin paddles
+       if(gamepad1.left_bumper){
+            paddles.setPower(liftPower);
+       }
+       
+       //reel in intake box
+       if(gamepad1.dpad_right){
+            inLift.setPower(-liftPower/1.5);
+       }
 
         else {
             RightFrontWheels.setPower(0);
             RightBackWheels.setPower(0);
             LeftBackWheels.setPower(0);
             LeftFrontWheels.setPower(0);
+            inTilt.setPower(0);
+            paddles.setPower(0);
+            outLift.setPower(0);
+            inLift.setPower(0);
         }
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
