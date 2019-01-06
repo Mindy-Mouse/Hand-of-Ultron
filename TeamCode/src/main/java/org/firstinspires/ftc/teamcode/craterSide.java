@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -29,6 +30,7 @@ public class craterSide extends LinearOpMode {
     DcMotor             LeftBackWheels = null;
     DcMotor             RightFrontWheels = null;
     DcMotor             RightBackWheels = null;
+    DcMotor             outLift = null;
     BNO055IMU           imu;
     ColorSensor         color1;
     ColorSensor         color2;
@@ -51,10 +53,6 @@ public class craterSide extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
-
     Orientation lastAngles = new Orientation();
 
     ElapsedTime runtime = new ElapsedTime();
@@ -63,10 +61,11 @@ public class craterSide extends LinearOpMode {
     double globalAngle, power = DRIVE_SPEED, correction;
 
     // hsvValues is an array that will hold the hue, saturation, and value information.
-    float hsvValues[] = {0F, 0F, 0F};
-
+    float hsv1[] = {0F, 0F, 0F};
+    float hsv2[] = {0F, 0F, 0F};
+    float hsv3[] = {0F, 0F, 0F};
     // values is a reference to the hsvValues array.
-    final float values[] = hsvValues;
+    //final float values3[] = hsv3;
 
     // sometimes it helps to multiply the raw RGB values with a scale factor
     // to amplify/attentuate the measured values.
@@ -74,8 +73,8 @@ public class craterSide extends LinearOpMode {
 
     // get a reference to the RelativeLayout so we can change the background
     // color of the Robot Controller app to match the hue detected by the RGB sensor.
-    int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-    final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+   // int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+   // final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
     @Override
     public void runOpMode() {
@@ -88,15 +87,19 @@ public class craterSide extends LinearOpMode {
         RightFrontWheels = hardwareMap.get(DcMotor.class,"RFW");
         RightBackWheels = hardwareMap.get(DcMotor.class,"RBW");
         LeftBackWheels = hardwareMap.get(DcMotor.class,"LBW");
+        outLift = hardwareMap.get(DcMotor.class, "outLift");
+
 
         LeftFrontWheels.setDirection(DcMotor.Direction.REVERSE);
         LeftBackWheels.setDirection(DcMotor.Direction.REVERSE);
         RightFrontWheels.setDirection(DcMotor.Direction.FORWARD);
         RightBackWheels.setDirection(DcMotor.Direction.FORWARD);
+        outLift.setDirection(DcMotor.Direction.REVERSE);
 
         color1 = hardwareMap.colorSensor.get("color1");
         color2 = hardwareMap.colorSensor.get("color2");
         color3 = hardwareMap.colorSensor.get("color3");
+
         marker = hardwareMap.servo.get("marker");
 
         // sets IMU parameters
@@ -135,35 +138,48 @@ public class craterSide extends LinearOpMode {
         LeftBackWheels.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         RightFrontWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightBackWheels.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        outLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
 
         //*******************************************************************************************************************************************************************
-
+        outLift.setTargetPosition(3900);    //land
+        outLift.setPower(0.9);
         gyroDrive(DRIVE_SPEED,6.0);    // Drive forward 6 inches
+        outLift.setTargetPosition(0);    //bring hook down
+        outLift.setPower(0.5);
         rotate( TURN_SPEED,  180);         // Turn  right  to  180 Degrees
         gyroDrive(DRIVE_SPEED,-6.0);    // Drive backward 6 inches
 
-        Color.RGBToHSV((int) (color1.red() * SCALE_FACTOR), (int) (color1.green() * SCALE_FACTOR),(int) (color1.blue() * SCALE_FACTOR), hsvValues);
-        Color.RGBToHSV((int) (color2.red() * SCALE_FACTOR), (int) (color2.green() * SCALE_FACTOR),(int) (color2.blue() * SCALE_FACTOR), hsvValues);
-        Color.RGBToHSV((int) (color3.red() * SCALE_FACTOR), (int) (color3.green() * SCALE_FACTOR),(int) (color3.blue() * SCALE_FACTOR), hsvValues);
+        Color.RGBToHSV((int) (color1.red() * SCALE_FACTOR), (int) (color1.green() * SCALE_FACTOR),(int) (color1.blue() * SCALE_FACTOR), hsv1);
+        Color.RGBToHSV((int) (color2.red() * SCALE_FACTOR), (int) (color2.green() * SCALE_FACTOR),(int) (color2.blue() * SCALE_FACTOR), hsv2);
+        Color.RGBToHSV((int) (color3.red() * SCALE_FACTOR), (int) (color3.green() * SCALE_FACTOR),(int) (color3.blue() * SCALE_FACTOR), hsv3);
 
         int     position = 0;
 
         for (int i = 0; i < 3; i++) {
-            if (hsvValues[0] < 100) {
+            if ((hsv1[0] < 100)|| (hsv2[0] < 100)|| (hsv3[0] < 100)){
                 //move sampling mechanism
                 i = 5;
                 sleep(5000);
             }
-            else if (hsvValues[0] > 100) {
+            else if ((hsv1[0] > 100)|| (hsv2[0] > 100)|| (hsv3[0] > 100)){
                 if(position == 0){
                     gyroDrive(DRIVE_SPEED, 5.0);    // Drive forward 5 inches
                     rotate(TURN_SPEED, -90);    //Turn left 90
                     gyroDrive(DRIVE_SPEED, 14.5);   //Drive forward 14.5 inches
                     rotate(TURN_SPEED, 90);     //Turn right 90
+                    gyroDrive(DRIVE_SPEED, -5.0);   //Drive backward 5 inches to mineral
+                }
+
+                if(position == 1){
+                    gyroDrive(DRIVE_SPEED, 5.0);    // Drive forward 5 inches
+                    rotate(TURN_SPEED, 90);    //Turn right 90
+                    gyroDrive(DRIVE_SPEED, 30);   //Drive forward 30 inches
+                    rotate(TURN_SPEED, -90);     //Turn left 90
                     gyroDrive(DRIVE_SPEED, -5.0);   //Drive backward 5 inches to mineral
                 }
 
@@ -176,7 +192,7 @@ public class craterSide extends LinearOpMode {
 
         rotate(TURN_SPEED,  -90);         // Turn right 90 Degrees
 
-        if (position == 1){
+        if (position == 1){     //gold in middle
             gyroDrive(DRIVE_SPEED,-26);      // Drive backward 26 inches move along lander line
             telemetry.addData("Distance: ", imu.getVelocity());
             telemetry.update();
@@ -189,7 +205,7 @@ public class craterSide extends LinearOpMode {
 
             marker.setPosition(0.3);    //drop marker
             marker.setPosition(0.7);    //retratct
-            
+
         }
 
         rotate( TURN_SPEED,  45);          // Turn right 45 degrees          turn perpendicular to the wall
