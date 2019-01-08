@@ -208,10 +208,67 @@ public class craterSide extends LinearOpMode {
             telemetry.addLine("Marker dropped");
             
             gyroDrive(DRIVE_SPEED, 40);    //drive away from depot
-            rotate(TURN_SPEED, -9);     //turn left 92 degrees
+            rotate(TURN_SPEED, -92);     //turn left 92 degrees
             gyroDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
-            rotate(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
+            rotate(TURN_SPEED,  90);         // Turn right 90 degrees turn parallel to the other side of lander
             gyroDrive(DRIVE_SPEED, 36);      // Drive forward 36 inches move along lander line
+            
+            rotate(TURN_SPEED,  -90);         // Turn left 90 degrees towards minerals
+            gyroDrive(DRIVE_SPEED, 5.0);    //move towards minerals
+            
+            inLift.setPower(TURN_SPEED);    //extend front basket into crater
+            sleep(3000);
+            inLift.setPower(0);
+        }
+        
+        else if (position == 2){     //gold on right
+            gyroDrive(DRIVE_SPEED,-41);      // Drive backward 41 inches move along lander line
+            telemetry.addData("Distance: ", imu.getVelocity());
+            rotate(TURN_SPEED,  -90);         // Turn left 90 degrees turn parallel to the other side of lander
+            gyroDrive(DRIVE_SPEED,-26);    // Drive backward 26 inches move along the lander line
+            telemetry.addData("Distance: ", imu.getVelocity());
+            rotate(TURN_SPEED, 85);     //turn right 85 degrees
+            gyroDrive(DRIVE_SPEED, -45);    //back up into depot
+
+            marker.setPosition(0.3);    //drop marker
+            marker.setPosition(0.7);    //retratct
+            telemetry.addLine("Marker dropped");
+            
+            gyroDrive(DRIVE_SPEED, 45);    //drive away from depot
+            rotate(TURN_SPEED, -85);     //turn left 85 degrees
+            gyroDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
+            rotate(TURN_SPEED,  90);         // Turn right 90 degrees turn parallel to the other side of lander
+            gyroDrive(DRIVE_SPEED, 40);      // Drive forward 40 inches move along lander line
+            
+            rotate(TURN_SPEED,  -90);         // Turn left 90 degrees towards minerals
+            gyroDrive(DRIVE_SPEED, 5.0);    //move towards minerals
+            
+            inLift.setPower(TURN_SPEED);    //extend front basket into crater
+            sleep(3000);
+            inLift.setPower(0);
+        }
+        
+        else if (position == 3){     //gold on left
+            gyroDrive(DRIVE_SPEED,-11);      // Drive backward 11 inches move along lander line
+            telemetry.addData("Distance: ", imu.getVelocity());
+            rotate(TURN_SPEED,  -90);         // Turn left 90 degrees turn parallel to the other side of lander
+            gyroDrive(DRIVE_SPEED,-48);    // Drive backward 48 inches move along the lander line
+            telemetry.addData("Distance: ", imu.getVelocity());
+            rotate(TURN_SPEED, 97);     //turn right 97 degrees
+            gyroDrive(DRIVE_SPEED, -46);    //back up into depot
+
+            marker.setPosition(0.3);    //drop marker
+            marker.setPosition(0.7);    //retratct
+            telemetry.addLine("Marker dropped");
+            
+            gyroDrive(DRIVE_SPEED, 46);    //drive away from depot
+            rotate(TURN_SPEED, -97);     //turn left 92 degrees
+            gyroDrive(DRIVE_SPEED, 48);    // Drive forward 48 inches move along the lander line
+            rotate(TURN_SPEED,  90);         // Turn right 90 degrees turn parallel to the other side of lander
+            gyroDrive(DRIVE_SPEED, 48);      // Drive forward 48 inches move along lander line
+            
+            rotate(TURN_SPEED,  -90);         // Turn left 90 degrees towards minerals
+            gyroDrive(DRIVE_SPEED, 5.0);    //move towards minerals
             
             inLift.setPower(TURN_SPEED);    //extend front basket into crater
             sleep(3000);
