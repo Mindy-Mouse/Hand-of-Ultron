@@ -31,6 +31,8 @@ public class craterSide extends LinearOpMode {
     DcMotor             RightFrontWheels = null;
     DcMotor             RightBackWheels = null;
     DcMotor             outLift = null;
+    DcMotor             inLift = null;
+    
     BNO055IMU           imu;
     ColorSensor         color1;
     ColorSensor         color2;
@@ -88,6 +90,7 @@ public class craterSide extends LinearOpMode {
         RightBackWheels = hardwareMap.get(DcMotor.class,"RBW");
         LeftBackWheels = hardwareMap.get(DcMotor.class,"LBW");
         outLift = hardwareMap.get(DcMotor.class, "outLift");
+        inLift = hardwareMap.get(DcMotor.class, "inLift");
 
 
         LeftFrontWheels.setDirection(DcMotor.Direction.REVERSE);
@@ -115,9 +118,7 @@ public class craterSide extends LinearOpMode {
         LeftBackWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightFrontWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightBackWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
-
-        // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
+        outLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Send telemetry message to alert driver that we are calibrating;
         imu.initialize(parameters);
 
@@ -138,12 +139,13 @@ public class craterSide extends LinearOpMode {
         LeftBackWheels.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         RightFrontWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightBackWheels.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        
         outLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         outLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        // Put a hold after each turn
+        outLift.setPower(0);
+        telemetry.addData("Cascade encoder: ", outLift.getCurrentPosition());
+        
+        waitForStart();
 
         //*******************************************************************************************************************************************************************
         outLift.setTargetPosition(3900);    //land
@@ -190,38 +192,41 @@ public class craterSide extends LinearOpMode {
         gyroDrive(DRIVE_SPEED, 5.0);    //move mineral
         gyroDrive(DRIVE_SPEED, 6.0);   // drives away
 
-        rotate(TURN_SPEED,  -90);         // Turn right 90 Degrees
+        rotate(TURN_SPEED,  -90);         // Turn left 90 Degrees
 
         if (position == 1){     //gold in middle
             gyroDrive(DRIVE_SPEED,-26);      // Drive backward 26 inches move along lander line
             telemetry.addData("Distance: ", imu.getVelocity());
-            telemetry.update();
             rotate(TURN_SPEED,  -90);         // Turn left 90 degrees turn parallel to the other side of lander
             gyroDrive(DRIVE_SPEED,-36);    // Drive backward 36 inches move along the lander line
             telemetry.addData("Distance: ", imu.getVelocity());
-            telemetry.update();
-            rotate(TURN_SPEED, 92);
+            rotate(TURN_SPEED, 92);     //turn right 92 degrees
             gyroDrive(DRIVE_SPEED, -40);    //back up into depot
 
             marker.setPosition(0.3);    //drop marker
             marker.setPosition(0.7);    //retratct
-
+            telemetry.addLine("Marker dropped");
+            
+            gyroDrive(DRIVE_SPEED, 40);    //drive away from depot
+            rotate(TURN_SPEED, -9);     //turn left 92 degrees
+            gyroDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
+            rotate(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
+            gyroDrive(DRIVE_SPEED, 36);      // Drive forward 36 inches move along lander line
+            
+            inLift.setPower(TURN_SPEED);    //extend front basket into crater
+            sleep(3000);
+            inLift.setPower(0);
         }
 
-        rotate( TURN_SPEED,  45);          // Turn right 45 degrees          turn perpendicular to the wall
+      /*  rotate( TURN_SPEED,  45);          // Turn right 45 degrees          turn perpendicular to the wall
         gyroDrive(DRIVE_SPEED,-36);      // Drive backward 36 inches      move to the wall
         telemetry.addData("Distance: ", imu.getVelocity());
         telemetry.update();
         rotate( TURN_SPEED,  90);          // Turn right 90 degrees          turn to the depot
         gyroDrive(DRIVE_SPEED,-50.2);     // Drive backward 50.2 inches   move to the depot
-
-
-
-
-
         rotate( TURN_SPEED,  45);         // Turn  right  to  45 Degrees
         gyroDrive(DRIVE_SPEED,5.0);    // Drive forward 5 inches
-
+*/
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -301,27 +306,7 @@ public class craterSide extends LinearOpMode {
             //RightBackWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
-
-    /**
-     *  Method to spin on central axis to point in a new direction.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the heading (angle)
-     *  2) Driver stops the opmode running.
-     *
-     * @param speed Desired speed of turn.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     */
-   /* public void gyroTurn (  double speed, double angle) {
-
-        // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
-            // Update telemetry & Allow time for other processes to run.
-            telemetry.update();
-        }
-    }
-
+  
     /**
      *  Method to obtain & hold a heading for a finite amount of time
      *  Move will stop once the requested time has elapsed
@@ -361,23 +346,7 @@ public class craterSide extends LinearOpMode {
         LeftBackWheels.setPower(0);
     }
 
-    /**
-     * Perform one cycle of closed loop heading control.
-     *
-     * @param speed     Desired speed of turn.
-     * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
-     *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                  If a relative angle is required, add/subtract from current heading.
-     * @param PCoeff    Proportional Gain coefficient
-     * @return
-     */
-
-    /**
-     * getError determines the error between the target angle and the robot's current heading
-     * @param   //targetAngle  Desired angle (relative to global reference established at last Gyro Reset).
-     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
-     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
-     */
+   
     private void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -417,7 +386,7 @@ public class craterSide extends LinearOpMode {
 
         return globalAngle;
     }
-    private void rotate(double power, int degrees) {
+    public void rotate(double power, int degrees) {
         double  leftPower, rightPower;
 
         // restart imu movement tracking.
