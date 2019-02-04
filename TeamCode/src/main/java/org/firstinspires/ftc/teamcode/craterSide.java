@@ -159,45 +159,29 @@ public class craterSide extends LinearOpMode {
 //*******************************************************************************************************************************************************************
 //*******************************************************************************************************************************************************************
 //*******************************************************************************************************************************************************************
-        gyroDrive(DRIVE_SPEED, -11.0);    // Drive backward 8 inches
-        sleep(500);
-
+        gyroDrive(DRIVE_SPEED, -7.0);    // Drive backward 7 inches
+        
         Color.RGBToHSV((int) (color1.red() * SCALE_FACTOR), (int) (color1.green() * SCALE_FACTOR), (int) (color1.blue() * SCALE_FACTOR), hsv1);
         Color.RGBToHSV((int) (color2.red() * SCALE_FACTOR), (int) (color2.green() * SCALE_FACTOR), (int) (color2.blue() * SCALE_FACTOR), hsv2);
         Color.RGBToHSV((int) (color3.red() * SCALE_FACTOR), (int) (color3.green() * SCALE_FACTOR), (int) (color3.blue() * SCALE_FACTOR), hsv3);
 
-        int position = 0, goldValue = 500;
+        int position = 0, goldValue = 50;
 
 
-        if (color1.alpha() > goldValue) {
-            telemetry.addData("Hue 1", color1.alpha());
-            telemetry.addData("Hue 2 ", color2.alpha());
+        if (color1.blue() > goldValue) {
+            telemetry.addData("Hue 1", color1.blue());
+            telemetry.addData("Hue 2 ", color2.blue());
             //gyroDrive(DRIVE_SPEED, -3.0);
             gyroTurn(TURN_SPEED, 30);
-            position = 2;
-
-            /*  if (position == 0) {
-                   gyroDrive(DRIVE_SPEED, 5.0);    // Drive forward 5 inches
-                   gyroTurn(TURN_SPEED, 90);    //Turn left 90
-                   gyroDrive(DRIVE_SPEED, 14.5);   //Drive forward 14.5 inches
-                   gyroTurn(TURN_SPEED, -90);     //Turn right 90
-                   gyroDrive(DRIVE_SPEED, -5.0);   //Drive backward 5 inches to mineral
-               }
-               if (position == 1) {
-                   gyroDrive(DRIVE_SPEED, 5.0);    // Drive forward 5 inches
-                   gyroTurn(TURN_SPEED, -90);    //Turn right 90
-                   gyroDrive(DRIVE_SPEED, 30);   //Drive forward 30 inches
-                   gyroTurn(TURN_SPEED, 90);     //Turn left 90
-                   gyroDrive(DRIVE_SPEED, -5.0);   //Drive backward 5 inches to mineral
-               }*/
+            position = 1;
         }
 
-        else if (color1.alpha() > goldValue) {
-            telemetry.addData("Hue 1", color1.alpha());
-            telemetry.addData("Hue 2 ", color2.alpha());
+        else if (color1.blue() < goldValue) {
+             telemetry.addData("Hue 1", color1.blue());
+            telemetry.addData("Hue 2 ", color2.blue());
             //gyroDrive(DRIVE_SPEED, -3.0);
             gyroTurn(TURN_SPEED, -30);
-            position = 1;
+            position = 2;
 
         }
 
@@ -436,12 +420,12 @@ public class craterSide extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * COUNTS_PER_INCH);
-            newLeftTarget = LeftFrontWheels.getCurrentPosition() + moveCounts;
+            newLeftTarget = LeftFrontWheels.getCurrentPosition() + (int)(moveCounts*.75);
             newRightTarget = RightFrontWheels.getCurrentPosition() + moveCounts;
             LeftFrontWheels.setTargetPosition(newLeftTarget);
             RightFrontWheels.setTargetPosition(newRightTarget);
 
-            newLeftTarget = LeftBackWheels.getCurrentPosition() + moveCounts;
+            newLeftTarget = LeftBackWheels.getCurrentPosition() + (int)(moveCounts*.75);
             newRightTarget = RightBackWheels.getCurrentPosition() + moveCounts;
             LeftBackWheels.setTargetPosition(newLeftTarget);
             RightBackWheels.setTargetPosition(newRightTarget);
@@ -494,12 +478,12 @@ public class craterSide extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * COUNTS_PER_INCH);
-            newLeftTarget = LeftFrontWheels.getCurrentPosition() + moveCounts;
+            newLeftTarget = LeftFrontWheels.getCurrentPosition() + (int)(moveCounts*.75);
             newRightTarget = RightFrontWheels.getCurrentPosition() + moveCounts;
             LeftFrontWheels.setTargetPosition(newLeftTarget);
             RightFrontWheels.setTargetPosition(newRightTarget);
 
-            newLeftTarget = LeftBackWheels.getCurrentPosition() + moveCounts;
+            newLeftTarget = LeftBackWheels.getCurrentPosition() + (int)(moveCounts*.75);
             newRightTarget = RightBackWheels.getCurrentPosition() + moveCounts;
             LeftBackWheels.setTargetPosition(newLeftTarget);
             RightBackWheels.setTargetPosition(newRightTarget);
@@ -511,61 +495,22 @@ public class craterSide extends LinearOpMode {
 
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            RightFrontWheels.setPower(speed);
-            RightBackWheels.setPower(speed);
-            LeftFrontWheels.setPower(speed);
-            LeftBackWheels.setPower(speed);
+            
 
             // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive()) {
+            while (opModeIsActive() && RightFrontWheels.getCurrentPosition() < RightFrontWheels.getTargetPosition()) {
 
-                while(((distance1.getDistance(DistanceUnit.CM) < 15)||(distance2.getDistance(DistanceUnit.CM) < 15)||(distance1.getDistance(DistanceUnit.CM) < 15))){
-
+                while(((distance1.getDistance(DistanceUnit.CM) < 15)||(distance2.getDistance(DistanceUnit.CM) < 15))){
+                    // Stop all motion;
+                    RightFrontWheels.setPower(0);
+                    RightBackWheels.setPower(0);
+                    LeftFrontWheels.setPower(0);
+                    LeftBackWheels.setPower(0);
                 }
-
-                // Stop all motion;
-                RightFrontWheels.setPower(0);
-                RightBackWheels.setPower(0);
-                LeftFrontWheels.setPower(0);
-                LeftBackWheels.setPower(0);
-
-                if(!LeftFrontWheels.isBusy() && !RightFrontWheels.isBusy()){
-                    if(LeftFrontWheels.getCurrentPosition() != LeftFrontWheels.getTargetPosition()){
-                        RightFrontWheels.setPower(speed);
-                        RightBackWheels.setPower(speed);
-                        LeftFrontWheels.setPower(speed);
-                        LeftBackWheels.setPower(speed);
-                    }
-
-                }
-
-
-
-
-                // telemetry.addData("Distance: ", imu.getVelocity());
-                //telemetry.update();
-
-               /* correction = checkDirection();
-                LeftFrontWheels.setPower(-speed + correction);
-                LeftBackWheels.setPower(-speed + correction);
-                RightFrontWheels.setPower(-speed);
-                RightBackWheels.setPower(-speed);*/
-            }
-
-            // Stop all motion;
-            RightFrontWheels.setPower(0);
-            RightBackWheels.setPower(0);
-            LeftFrontWheels.setPower(0);
-            LeftBackWheels.setPower(0);
-
-            if(!LeftFrontWheels.isBusy() && !RightFrontWheels.isBusy()){
-                if(LeftFrontWheels.getCurrentPosition() != LeftFrontWheels.getTargetPosition()){
-                    RightFrontWheels.setPower(speed);
-                    RightBackWheels.setPower(speed);
-                    LeftFrontWheels.setPower(speed);
-                    LeftBackWheels.setPower(speed);
-                }
-
+                RightFrontWheels.setPower(speed);
+                RightBackWheels.setPower(speed);
+                LeftFrontWheels.setPower(speed);
+                LeftBackWheels.setPower(speed);
             }
 
             // Stop all motion;
