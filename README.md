@@ -1,11 +1,11 @@
 To find our team code click on:
-	TeamCode
-	src/main
-	java/org/firstinspires/ftc/teamcode
+	1) TeamCode
+	2) src/main
+	3) java/org/firstinspires/ftc/teamcode
 
 To find the FTC sample code click on:
-	FtcRobotController
-	src/main
-	java/org/firstinspires/ftc/robotcontroller
-	external/samples
+	1) FtcRobotController
+	2) src/main
+	3) java/org/firstinspires/ftc/robotcontroller
+	4) external/samples
 
