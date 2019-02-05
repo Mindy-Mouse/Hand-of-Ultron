@@ -151,47 +151,51 @@ public class depotSide extends LinearOpMode {
         Color.RGBToHSV((int) (color2.red() * SCALE_FACTOR), (int) (color2.green() * SCALE_FACTOR), (int) (color2.blue() * SCALE_FACTOR), hsv2);
         Color.RGBToHSV((int) (color3.red() * SCALE_FACTOR), (int) (color3.green() * SCALE_FACTOR), (int) (color3.blue() * SCALE_FACTOR), hsv3);
 
-        int position = 0, goldValue = 139;
-        for (int i = 0; i < 3; i++) {
-            telemetry.addData("color 1: ", hsv1[0]);
-            telemetry.addData("color 2: ", hsv2[0]);
-            telemetry.addData("color 3: ", hsv3[0]);
+        int position = 0, goldValue = 50;
 
-            if ((hsv1[0] > goldValue) || (hsv2[0] > goldValue) || (hsv3[0] > goldValue)) {
 
-                if (position == 0) {
-                    gyroDrive(DRIVE_SPEED, 5.0);    // Drive forward 5 inches
-                    gyroTurn(TURN_SPEED, 90);    //Turn left 90
-                    gyroDrive(DRIVE_SPEED, 14.5);   //Drive forward 14.5 inches
-                    gyroTurn(TURN_SPEED, -90);     //Turn right 90
-                    gyroDrive(DRIVE_SPEED, -5.0);   //Drive backward 5 inches to mineral
-                }
+        if (color1.blue() > goldValue) {
+            telemetry.addData("Hue 1", color1.blue());
+            telemetry.addData("Hue 2 ", color2.blue());
+            gyroDrive(DRIVE_SPEED, 3.0);
+            gyroTurn(TURN_SPEED, 30);
+            position = 1;
 
-                if (position == 1) {
-                    gyroDrive(DRIVE_SPEED, 5.0);    // Drive forward 5 inches
-                    gyroTurn(TURN_SPEED, -90);    //Turn right 90
-                    gyroDrive(DRIVE_SPEED, 30);   //Drive forward 30 inches
-                    gyroTurn(TURN_SPEED, 90);     //Turn left 90
-                    gyroDrive(DRIVE_SPEED, -5.0);   //Drive backward 5 inches to mineral
-                }
-
-            }
-
-            else {
-                //move sampling mechanism
-                i = 5;
-
-            }
-            position++;
-            telemetry.addData("Position: ", position);
-            telemetry.update();
         }
 
-        gyroDrive(DRIVE_SPEED, -10.0);    //move mineral
+        else if (color1.blue() < goldValue) {
+            telemetry.addData("Hue 1", color1.blue());
+            telemetry.addData("Hue 2 ", color2.blue());
+            gyroDrive(DRIVE_SPEED, 3.0);
+            gyroTurn(TURN_SPEED, -30);
+            position = 2;
+
+        }
+
+        else {
+            //move sampling mechanism
+            telemetry.addData("Hue 1", color1.alpha());
+            telemetry.addData("Hue 2 ", color2.alpha());
+            sleep(5000);
+
+            gyroDrive(DRIVE_SPEED, 3.0);    // Drive forward 5 inches
+            gyroTurn(TURN_SPEED, -90);    //Turn right 90
+            gyroDrive(DRIVE_SPEED, 20);   //Drive forward 25 inches
+            gyroTurn(TURN_SPEED, 90);     //Turn left 90
+            gyroDrive(DRIVE_SPEED, -3.0);   //Drive backward 5 inches to mineral
+            position = 3;
+        }
+        telemetry.addData("Position: ", position);
+        telemetry.update();
+
+
+        gyroDrive(DRIVE_SPEED, -8.0);    //move mineral
         telemetry.addData("Sampling ", "complete");
-        marker.setPosition(0.3);    //drop marker
+        marker.setPosition(0.1);    //drop marker
         telemetry.addData("Marker", "dropped");
         telemetry.update();
+
+        gyroTurn(TURN_SPEED, -45);
 
         sleep(8000);
 
