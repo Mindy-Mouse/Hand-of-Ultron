@@ -57,7 +57,7 @@ public class craterSide extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.75;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.4;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
@@ -159,8 +159,7 @@ public class craterSide extends LinearOpMode {
 //*******************************************************************************************************************************************************************
 //*******************************************************************************************************************************************************************
 //*******************************************************************************************************************************************************************
-        gyroDrive(DRIVE_SPEED, -7.0);    // Drive backward 8 inches
-       // sleep(500);
+        gyroDrive(DRIVE_SPEED, -7.0);    // Drive backward 7 inches
 
         Color.RGBToHSV((int) (color1.red() * SCALE_FACTOR), (int) (color1.green() * SCALE_FACTOR), (int) (color1.blue() * SCALE_FACTOR), hsv1);
         Color.RGBToHSV((int) (color2.red() * SCALE_FACTOR), (int) (color2.green() * SCALE_FACTOR), (int) (color2.blue() * SCALE_FACTOR), hsv2);
@@ -172,14 +171,15 @@ public class craterSide extends LinearOpMode {
         if (color1.blue() > goldValue) {
             telemetry.addData("Hue 1", color1.blue());
             telemetry.addData("Hue 2 ", color2.blue());
+            //gyroDrive(DRIVE_SPEED, -3.0);
             gyroTurn(TURN_SPEED, 30);
             position = 1;
-
         }
 
         else if (color1.blue() < goldValue) {
             telemetry.addData("Hue 1", color1.blue());
             telemetry.addData("Hue 2 ", color2.blue());
+            //gyroDrive(DRIVE_SPEED, -3.0);
             gyroTurn(TURN_SPEED, -30);
             position = 2;
 
@@ -191,24 +191,24 @@ public class craterSide extends LinearOpMode {
             telemetry.addData("Hue 2 ", color2.alpha());
             sleep(5000);
 
-           // gyroDrive(DRIVE_SPEED, 3.0);    // Drive forward 5 inches
+            gyroDrive(DRIVE_SPEED, 3.0);    // Drive forward 5 inches
             gyroTurn(TURN_SPEED, -90);    //Turn right 90
             gyroDrive(DRIVE_SPEED, 20);   //Drive forward 25 inches
             gyroTurn(TURN_SPEED, 90);     //Turn left 90
-           // gyroDrive(DRIVE_SPEED, -3.0);   //Drive backward 5 inches to mineral
+            gyroDrive(DRIVE_SPEED, -3.0);   //Drive backward 5 inches to mineral
             position = 3;
         }
         telemetry.addData("Position: ", position);
         telemetry.update();
 
 
-        gyroDrive(DRIVE_SPEED, -12.0);    //move mineral
-        gyroDrive(DRIVE_SPEED, 12.0);   // drives away
+        gyroDrive(DRIVE_SPEED, -14.0);    //move mineral
+        gyroDrive(DRIVE_SPEED, 14.0);   // drives away
 
         if (position == 1){     //gold in middle
             gyroTurn(TURN_SPEED,  55);         // Turn left 60 Degrees
-            gyroDrive(DRIVE_SPEED,-36);      // Drive backward 36 inches move along lander line
-            gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
+            gyroDrive(DRIVE_SPEED,-25);      // Drive backward 26 inches move along lander line
+            /*gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
             safeDrive(DRIVE_SPEED,-36);    // Drive backward 36 inches move along the lander line
             gyroTurn(TURN_SPEED, -92);     //turn right 92 degrees
             safeDrive(DRIVE_SPEED, -40);    //back up into depot
@@ -221,13 +221,13 @@ public class craterSide extends LinearOpMode {
             gyroTurn(TURN_SPEED, 92);     //turn left 92 degrees
             safeDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
             gyroTurn(TURN_SPEED,  -90);         // Turn right 90 degrees turn parallel to the other side of lander
-            safeDrive(DRIVE_SPEED, 36);      // Drive forward 36 inches move along lander line
+            safeDrive(DRIVE_SPEED, 36);      // Drive forward 36 inches move along lander line*/
         }
 
         else if (position == 2){     //gold on right
-            gyroTurn(TURN_SPEED,  115);         // Turn left 120 Degrees
-            gyroDrive(DRIVE_SPEED,-41);      // Drive backward 41 inches move along lander line
-            gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
+            gyroTurn(TURN_SPEED,  110);         // Turn left 120 Degrees
+            gyroDrive(DRIVE_SPEED,-28);      // Drive backward 41 inches move along lander line
+           /* gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
             safeDrive(DRIVE_SPEED,-26);    // Drive backward 26 inches move along the lander line
             gyroTurn(TURN_SPEED, -85);     //turn right 85 degrees
             safeDrive(DRIVE_SPEED, -45);    //back up into depot
@@ -240,13 +240,13 @@ public class craterSide extends LinearOpMode {
             gyroTurn(TURN_SPEED, 85);     //turn left 85 degrees
             safeDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
             gyroTurn(TURN_SPEED,  -90);         // Turn right 90 degrees turn parallel to the other side of lander
-            safeDrive(DRIVE_SPEED, 45);      // Drive forward 40 inches move along lander line
+            safeDrive(DRIVE_SPEED, 45);      // Drive forward 40 inches move along lander line*/
         }
 
         else if (position == 3){     //gold on left
             gyroTurn(TURN_SPEED,  90);         // Turn left 90 Degrees
-            gyroDrive(DRIVE_SPEED,-11);      // Drive backward 11 inches move along lander line
-            telemetry.addData("Distance: ", imu.getVelocity());
+            gyroDrive(DRIVE_SPEED,-5);      // Drive backward 11 inches move along lander line
+            telemetry.addData("Distance: ", imu.getVelocity());/*
             gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
             safeDrive(DRIVE_SPEED,-48);    // Drive backward 48 inches move along the lander line
             telemetry.addData("Distance: ", imu.getVelocity());
@@ -261,15 +261,15 @@ public class craterSide extends LinearOpMode {
             gyroTurn(TURN_SPEED, 97);     //turn left 92 degrees
             safeDrive(DRIVE_SPEED, 48);    // Drive forward 48 inches move along the lander line
             gyroTurn(TURN_SPEED,  -90);         // Turn right 90 degrees turn parallel to the other side of lander
-            safeDrive(DRIVE_SPEED, 27);      // Drive forward 48 inches move along lander line
+            safeDrive(DRIVE_SPEED, 27);      // Drive forward 48 inches move along lander line*/
         }
 
-        gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees towards minerals
+       /* gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees towards minerals
         safeDrive(DRIVE_SPEED, 5.0);    //move towards minerals
 
         inLift.setTargetPosition(2500);    //extend front basket into crater
         inLift.setPower(.3);
-        while (inLift.isBusy()){}
+        while (inLift.isBusy()){}*/
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -399,7 +399,7 @@ public class craterSide extends LinearOpMode {
         sleep(100);
     }
 
-      /**
+    /**
      *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
      *  Move will stop if either of these conditions occur:
      *  1) Move gets to the desired position
@@ -420,12 +420,12 @@ public class craterSide extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * COUNTS_PER_INCH);
-            newLeftTarget = LeftFrontWheels.getCurrentPosition() + (int)(moveCounts*.75);
+            newLeftTarget = LeftFrontWheels.getCurrentPosition() + moveCounts;
             newRightTarget = RightFrontWheels.getCurrentPosition() + moveCounts;
             LeftFrontWheels.setTargetPosition(newLeftTarget);
             RightFrontWheels.setTargetPosition(newRightTarget);
 
-            newLeftTarget = LeftBackWheels.getCurrentPosition() + (int)(moveCounts*.75);
+            newLeftTarget = LeftBackWheels.getCurrentPosition() + moveCounts;
             newRightTarget = RightBackWheels.getCurrentPosition() + moveCounts;
             LeftBackWheels.setTargetPosition(newLeftTarget);
             RightBackWheels.setTargetPosition(newRightTarget);
@@ -444,14 +444,14 @@ public class craterSide extends LinearOpMode {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() && (LeftFrontWheels.isBusy() && RightFrontWheels.isBusy())) {
-               // telemetry.addData("Distance: ", imu.getVelocity());
+                // telemetry.addData("Distance: ", imu.getVelocity());
                 //telemetry.update();
 
-             /*   correction = checkDirection();
+                correction = checkDirection();
                 LeftFrontWheels.setPower(-speed + correction);
                 LeftBackWheels.setPower(-speed + correction);
                 RightFrontWheels.setPower(-speed);
-                RightBackWheels.setPower(-speed);*/
+                RightBackWheels.setPower(-speed);
             }
 
             // Stop all motion;
@@ -495,43 +495,22 @@ public class craterSide extends LinearOpMode {
 
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            RightFrontWheels.setPower(speed);
-            RightBackWheels.setPower(speed);
-            LeftFrontWheels.setPower(speed);
-            LeftBackWheels.setPower(speed);
+
 
             // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() && RightFrontWheels.getCurrentPosition()< RightFrontWheels.getTargetPosition()) {
+            while (opModeIsActive() && RightFrontWheels.getCurrentPosition() < RightFrontWheels.getTargetPosition()) {
 
-                while((distance1.getDistance(DistanceUnit.CM) < 15)||(distance2.getDistance(DistanceUnit.CM) < 15)){
+                while(((distance1.getDistance(DistanceUnit.CM) < 15)||(distance2.getDistance(DistanceUnit.CM) < 15))){
                     // Stop all motion;
                     RightFrontWheels.setPower(0);
                     RightBackWheels.setPower(0);
                     LeftFrontWheels.setPower(0);
                     LeftBackWheels.setPower(0);
                 }
-
-               /* correction = checkDirection();
-                LeftFrontWheels.setPower(-speed + correction);
-                LeftBackWheels.setPower(-speed + correction);
-                RightFrontWheels.setPower(-speed);
-                RightBackWheels.setPower(-speed);*/
-            }
-
-            // Stop all motion;
-            RightFrontWheels.setPower(0);
-            RightBackWheels.setPower(0);
-            LeftFrontWheels.setPower(0);
-            LeftBackWheels.setPower(0);
-
-            if(!LeftFrontWheels.isBusy() && !RightFrontWheels.isBusy()){
-                if(LeftFrontWheels.getCurrentPosition() != LeftFrontWheels.getTargetPosition()){
-                    RightFrontWheels.setPower(speed);
-                    RightBackWheels.setPower(speed);
-                    LeftFrontWheels.setPower(speed);
-                    LeftBackWheels.setPower(speed);
-                }
-
+                RightFrontWheels.setPower(speed);
+                RightBackWheels.setPower(speed);
+                LeftFrontWheels.setPower(speed);
+                LeftBackWheels.setPower(speed);
             }
 
             // Stop all motion;
@@ -549,5 +528,4 @@ public class craterSide extends LinearOpMode {
     }
 
 }
-
 
