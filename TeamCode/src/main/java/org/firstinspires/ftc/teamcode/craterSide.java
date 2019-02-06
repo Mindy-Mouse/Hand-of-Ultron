@@ -202,21 +202,21 @@ public class craterSide extends LinearOpMode {
         telemetry.update();
 
 
-        gyroDrive(DRIVE_SPEED, -14.0);    //move mineral
-        gyroDrive(DRIVE_SPEED, 14.0);   // drives away
+        gyroDrive(DRIVE_SPEED, -13.0);    //move mineral
+        gyroDrive(DRIVE_SPEED, 12.0);   // drives away
 
         if (position == 1){     //gold in middle
             gyroTurn(TURN_SPEED,  55);         // Turn left 60 Degrees
-            gyroDrive(DRIVE_SPEED,-25);      // Drive backward 26 inches move along lander line
-            /*gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
-            safeDrive(DRIVE_SPEED,-36);    // Drive backward 36 inches move along the lander line
+            gyroDrive(DRIVE_SPEED,-46);      // Drive backward move along lander line
+            gyroTurn(TURN_SPEED,  87);         // Turn left 90 degrees turn parallel to the other side of lander
+            gyroDrive(DRIVE_SPEED,-30);    // Drive backward 36 inches move along the lander line
             gyroTurn(TURN_SPEED, -92);     //turn right 92 degrees
-            safeDrive(DRIVE_SPEED, -40);    //back up into depot
+            gyroDrive(DRIVE_SPEED, -23);    //back up into depot
 
             marker.setPosition(0.1);    //drop marker
-            marker.setPosition(0.7);    //retratct
-            telemetry.addLine("Marker dropped");
 
+            telemetry.addLine("Marker dropped");
+/*
             safeDrive(DRIVE_SPEED, 40);    //drive away from depot
             gyroTurn(TURN_SPEED, 92);     //turn left 92 degrees
             safeDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
@@ -225,18 +225,18 @@ public class craterSide extends LinearOpMode {
         }
 
         else if (position == 2){     //gold on right
-            gyroTurn(TURN_SPEED,  110);         // Turn left 120 Degrees
-            gyroDrive(DRIVE_SPEED,-28);      // Drive backward 41 inches move along lander line
-           /* gyroTurn(TURN_SPEED,  90);         // Turn left 90 degrees turn parallel to the other side of lander
-            safeDrive(DRIVE_SPEED,-26);    // Drive backward 26 inches move along the lander line
-            gyroTurn(TURN_SPEED, -85);     //turn right 85 degrees
-            safeDrive(DRIVE_SPEED, -45);    //back up into depot
+            gyroTurn(TURN_SPEED,  105);         // Turn left 120 Degrees
+            gyroDrive(DRIVE_SPEED,-52);      // Drive backward 41 inches move along lander line
+            gyroTurn(TURN_SPEED,  87);         // Turn left 90 degrees turn parallel to the other side of lander
+            gyroDrive(DRIVE_SPEED,-11);    // Drive backward 26 inches move along the lander line
+            gyroTurn(TURN_SPEED, -80);     //turn right 70 degrees
+            gyroDrive(DRIVE_SPEED, -26);    //back up into depot
 
             marker.setPosition(0.1);    //drop marker
-            marker.setPosition(0.7);    //retratct
+
             telemetry.addLine("Marker dropped");
 
-            safeDrive(DRIVE_SPEED, 45);    //drive away from depot
+            /*safeDrive(DRIVE_SPEED, 45);    //drive away from depot
             gyroTurn(TURN_SPEED, 85);     //turn left 85 degrees
             safeDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
             gyroTurn(TURN_SPEED,  -90);         // Turn right 90 degrees turn parallel to the other side of lander
@@ -254,7 +254,7 @@ public class craterSide extends LinearOpMode {
             safeDrive(DRIVE_SPEED, -46);    //back up into depot
 
             marker.setPosition(0.);    //drop marker
-            marker.setPosition(0.7);    //retratct
+
             telemetry.addLine("Marker dropped");
 
             safeDrive(DRIVE_SPEED, 46);    //drive away from depot
@@ -426,7 +426,7 @@ public class craterSide extends LinearOpMode {
             RightFrontWheels.setTargetPosition(newRightTarget);
 
             newLeftTarget = LeftBackWheels.getCurrentPosition() + moveCounts;
-            newRightTarget = RightBackWheels.getCurrentPosition() + moveCounts;
+            newRightTarget = RightBackWheels.getCurrentPosition() + (int)(moveCounts*1.1);
             LeftBackWheels.setTargetPosition(newLeftTarget);
             RightBackWheels.setTargetPosition(newRightTarget);
 
@@ -438,7 +438,7 @@ public class craterSide extends LinearOpMode {
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             RightFrontWheels.setPower(speed);
-            RightBackWheels.setPower(speed);
+            RightBackWheels.setPower(speed*1.2);
             LeftFrontWheels.setPower(speed);
             LeftBackWheels.setPower(speed);
 
@@ -500,7 +500,7 @@ public class craterSide extends LinearOpMode {
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() && RightFrontWheels.getCurrentPosition() < RightFrontWheels.getTargetPosition()) {
 
-                while(((distance1.getDistance(DistanceUnit.CM) < 15)||(distance2.getDistance(DistanceUnit.CM) < 15))){
+                while(((distance1.getDistance(DistanceUnit.CM) < 6)||(distance2.getDistance(DistanceUnit.CM) < 6))){
                     // Stop all motion;
                     RightFrontWheels.setPower(0);
                     RightBackWheels.setPower(0);
