@@ -210,7 +210,7 @@ public class fastCraterSide extends LinearOpMode {
                     String.format(Locale.US, "%.02f", distance2.getDistance(DistanceUnit.CM)));
             telemetry.update();
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -16);
+            //gyroDrive(DRIVE_SPEED, -16);
             gyroTurn(TURN_SPEED,  30);         // Turn left  turn parallel to wall
             gyroDrive(DRIVE_SPEED,-20);    // Drive backward to depot
 
@@ -240,7 +240,7 @@ public class fastCraterSide extends LinearOpMode {
                     String.format(Locale.US, "%.02f", distance2.getDistance(DistanceUnit.CM)));
             telemetry.update();
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -16);
+           // gyroDrive(DRIVE_SPEED, -16);
             gyroTurn(TURN_SPEED,  30);         // Turn left turn parallel to the wall
             gyroDrive(DRIVE_SPEED,-20);    // Drive backward to depot
 
@@ -270,7 +270,7 @@ public class fastCraterSide extends LinearOpMode {
                     String.format(Locale.US, "%.02f", distance2.getDistance(DistanceUnit.CM)));
             telemetry.update();
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -11);
+          //  gyroDrive(DRIVE_SPEED, -11);
             gyroTurn(TURN_SPEED,  25);         // Turn left  turn parallel to wall
             gyroDrive(DRIVE_SPEED,-35);    // Drive backward to depot
 
@@ -445,7 +445,7 @@ public class fastCraterSide extends LinearOpMode {
             RightFrontWheels.setTargetPosition(newRightTarget);
 
             newLeftTarget = LeftBackWheels.getCurrentPosition() + moveCounts;
-            newRightTarget = RightBackWheels.getCurrentPosition() + (int)(moveCounts*1.1);
+            newRightTarget = RightBackWheels.getCurrentPosition() + moveCounts;
             LeftBackWheels.setTargetPosition(newLeftTarget);
             RightBackWheels.setTargetPosition(newRightTarget);
 
@@ -457,7 +457,7 @@ public class fastCraterSide extends LinearOpMode {
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             RightFrontWheels.setPower(speed);
-            RightBackWheels.setPower(speed*1.2);
+            RightBackWheels.setPower(speed);
             LeftFrontWheels.setPower(speed);
             LeftBackWheels.setPower(speed);
 
@@ -497,12 +497,12 @@ public class fastCraterSide extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * COUNTS_PER_INCH);
-            newLeftTarget = LeftFrontWheels.getCurrentPosition() + (int)(moveCounts*.75);
+            newLeftTarget = LeftFrontWheels.getCurrentPosition() + moveCounts;
             newRightTarget = RightFrontWheels.getCurrentPosition() + moveCounts;
             LeftFrontWheels.setTargetPosition(newLeftTarget);
             RightFrontWheels.setTargetPosition(newRightTarget);
 
-            newLeftTarget = LeftBackWheels.getCurrentPosition() + (int)(moveCounts*.75);
+            newLeftTarget = LeftBackWheels.getCurrentPosition() + moveCounts;
             newRightTarget = RightBackWheels.getCurrentPosition() + moveCounts;
             LeftBackWheels.setTargetPosition(newLeftTarget);
             RightBackWheels.setTargetPosition(newRightTarget);
@@ -524,7 +524,7 @@ public class fastCraterSide extends LinearOpMode {
                 telemetry.update();
 
 
-                while(((distance2.getDistance(DistanceUnit.CM) < 2))){//(distance1.getDistance(DistanceUnit.MM) < 5)||
+                while(((distance2.getDistance(DistanceUnit.MM) < 50))){//(distance1.getDistance(DistanceUnit.MM) < 5)||
                     // Stop all motion;
                     RightFrontWheels.setPower(0);
                     RightBackWheels.setPower(0);
