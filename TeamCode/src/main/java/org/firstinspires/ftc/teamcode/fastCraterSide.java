@@ -119,6 +119,13 @@ public class fastCraterSide extends LinearOpMode {
         LeftBackWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightFrontWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightBackWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+      /*  LeftFrontWheels.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LeftBackWheels.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RightFrontWheels.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RightBackWheels.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
+
+
         inLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         marker.setPosition(0.5);
@@ -156,17 +163,21 @@ public class fastCraterSide extends LinearOpMode {
         Color.RGBToHSV((int) (color2.red() * SCALE_FACTOR), (int) (color2.green() * SCALE_FACTOR), (int) (color2.blue() * SCALE_FACTOR), hsv2);
         Color.RGBToHSV((int) (color3.red() * SCALE_FACTOR), (int) (color3.green() * SCALE_FACTOR), (int) (color3.blue() * SCALE_FACTOR), hsv3);
 
-        int position = 0, goldValue = 40;
-
+        int position = 0, goldValue = 14;
+        telemetry.addData("Hue 1", color1.alpha());
+        telemetry.addData("Hue 2 ", color2.alpha());
+        telemetry.update();
+        sleep(800);
 
         if (color1.blue() > goldValue && color2.blue() > goldValue) {
             //move sampling mechanism
             telemetry.addData("Hue 1", color1.alpha());
             telemetry.addData("Hue 2 ", color2.alpha());
 
-            gyroTurn(TURN_SPEED, -85);    //Turn right 90
+            gyroTurn(TURN_SPEED, -90);    //Turn right 90
             gyroDrive(DRIVE_SPEED, 19);   //Drive forward 25 inches
-            gyroTurn(TURN_SPEED, 85);     //Turn left 90
+            gyroTurn(TURN_SPEED, 90);     //Turn left 90
+            gyroDrive(DRIVE_SPEED, -3);
             position = 3;
         }
 
@@ -192,11 +203,11 @@ public class fastCraterSide extends LinearOpMode {
 
 
         gyroDrive(DRIVE_SPEED, -11.0);    //move mineral
-        gyroDrive(DRIVE_SPEED, 10.0);   // drives away
+        gyroDrive(DRIVE_SPEED, 8.75);   // drives away
 
         if (position == 1){     //gold in middle
-            gyroTurn(TURN_SPEED,  55);         // Turn left 60 Degrees
-            gyroDrive(DRIVE_SPEED, -45);
+            gyroTurn(TURN_SPEED,  50);         // Turn left 60 Degrees
+            gyroDrive(DRIVE_SPEED, -54);
             safeDrive(DRIVE_SPEED,-10);      // Drive backward move along lander line
             telemetry.clearAll();
             telemetry.addData("Distance 1:",
@@ -206,7 +217,7 @@ public class fastCraterSide extends LinearOpMode {
             telemetry.update();
             sleep(2000);
             //gyroDrive(DRIVE_SPEED, -16);
-            gyroTurn(TURN_SPEED,  35);         // Turn left  turn parallel to wall
+            gyroTurn(TURN_SPEED,  32);         // Turn left  turn parallel to wall
             gyroDrive(DRIVE_SPEED,-40);    // Drive backward to depot
 
             marker.setPosition(0.3);    //drop marker
@@ -216,17 +227,16 @@ public class fastCraterSide extends LinearOpMode {
             marker.setPosition(0.1);    //drop marker
 
             telemetry.addLine("Marker dropped");
-/*
-            safeDrive(DRIVE_SPEED, 40);    //drive away from depot
-            gyroTurn(TURN_SPEED, 92);     //turn left 92 degrees
-            safeDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
-            gyroTurn(TURN_SPEED,  -90);         // Turn right 90 degrees turn parallel to the other side of lander
-            safeDrive(DRIVE_SPEED, 36);      // Drive forward 36 inches move along lander line*/
+
+            gyroTurn(TURN_SPEED, 10);
+            gyroDrive(DRIVE_SPEED, 30);
+            gyroTurn(TURN_SPEED, 8);
+            safeDrive(DRIVE_SPEED, 32);    //move towards crater
         }
 
         else if (position == 2){     //gold on right
             gyroTurn(TURN_SPEED,  105);         // Turn left 120 Degrees
-            gyroDrive(DRIVE_SPEED, -50);
+            gyroDrive(DRIVE_SPEED, -55);
             safeDrive(DRIVE_SPEED,-10);      // Drive backward to wall
             telemetry.clearAll();
             telemetry.addData("Distance 1:",
@@ -236,7 +246,7 @@ public class fastCraterSide extends LinearOpMode {
             telemetry.update();
             sleep(2000);
            // gyroDrive(DRIVE_SPEED, -16);
-            gyroTurn(TURN_SPEED,  45);         // Turn left turn parallel to the wall
+            gyroTurn(TURN_SPEED,  30);         // Turn left turn parallel to the wall
             gyroDrive(DRIVE_SPEED,-40);    // Drive backward to depot
 
             marker.setPosition(0.3);    //drop marker
@@ -246,18 +256,17 @@ public class fastCraterSide extends LinearOpMode {
             marker.setPosition(0.1);    //drop marker
             telemetry.addLine("Marker dropped");
 
-            /*safeDrive(DRIVE_SPEED, 45);    //drive away from depot
-            gyroTurn(TURN_SPEED, 85);     //turn left 85 degrees
-            safeDrive(DRIVE_SPEED, 36);    // Drive forward 36 inches move along the lander line
-            gyroTurn(TURN_SPEED,  -90);         // Turn right 90 degrees turn parallel to the other side of lander
-            safeDrive(DRIVE_SPEED, 45);      // Drive forward 40 inches move along lander line*/
+            gyroTurn(TURN_SPEED, 10);
+            gyroDrive(DRIVE_SPEED, 30);
+            gyroTurn(TURN_SPEED, 8);
+            safeDrive(DRIVE_SPEED, 32);    //move towards crater
         }
 
         else if (position == 3){     //gold on left
-            gyroDrive(DRIVE_SPEED, -4);
-            gyroTurn(TURN_SPEED,  75);         // Turn left.
-            gyroDrive(DRIVE_SPEED, -10);
-            safeDrive(DRIVE_SPEED,-35);      // Drive backward move along lander line
+            gyroDrive(DRIVE_SPEED, -3);
+            gyroTurn(TURN_SPEED,  91.5);         // Turn left.
+            gyroDrive(DRIVE_SPEED, -32);
+            safeDrive(DRIVE_SPEED,-10);      // Drive backward move along lander line
             telemetry.clearAll();
             telemetry.addData("Distance 1:",
                     String.format(Locale.US, "%.02f", distance1.getDistance(DistanceUnit.CM)));
@@ -266,7 +275,7 @@ public class fastCraterSide extends LinearOpMode {
             telemetry.update();
             sleep(2000);
           //  gyroDrive(DRIVE_SPEED, -11);
-            gyroTurn(TURN_SPEED,  55);         // Turn left  turn parallel to wall
+            gyroTurn(TURN_SPEED,  32);         // Turn left  turn parallel to wall
             gyroDrive(DRIVE_SPEED,-40);    // Drive backward to depot
 
             marker.setPosition(0.3);    //drop marker
@@ -277,9 +286,9 @@ public class fastCraterSide extends LinearOpMode {
 
             telemetry.addLine("Marker dropped");
 
+            gyroTurn(TURN_SPEED, 10);
+            gyroDrive(DRIVE_SPEED, 61);
         }
-
-        gyroDrive(DRIVE_SPEED, 60);    //move towards crater
 
        /* inLift.setTargetPosition(2500);    //extend front basket into crater
         inLift.setPower(.3);
@@ -288,9 +297,6 @@ public class fastCraterSide extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
 */
-
-        sleep(2000);
-
     }
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -514,11 +520,11 @@ public class fastCraterSide extends LinearOpMode {
             while (opModeIsActive() && (RightFrontWheels.getCurrentPosition() < RightFrontWheels.getTargetPosition())) { //RightFrontWheels.getCurrentPosition() < RightFrontWheels.getTargetPosition()
 
                 telemetry.addData("Distance 1: ", distance1.getDistance(DistanceUnit.CM));
-             //   telemetry.addData("Distance 2: ", distance2.getDistance(DistanceUnit.CM));
+                telemetry.addData("Distance 3: ", distance3.getDistance(DistanceUnit.CM));
                 //telemetry.update();
 
 
-                while(distance1.getDistance(DistanceUnit.MM) < 10){//(distance1.getDistance(DistanceUnit.MM) < 5)||
+                while(distance1.getDistance(DistanceUnit.MM) < 10 || distance3.getDistance(DistanceUnit.CM) < 12){//(distance1.getDistance(DistanceUnit.MM) < 5)||
                     // Stop all motion;
                     RightFrontWheels.setPower(0);
                     RightBackWheels.setPower(0);
