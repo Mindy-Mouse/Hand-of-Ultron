@@ -161,7 +161,7 @@ public class hopefullyRight extends OpMode {
             outLift.setPower(liftPower*2);
         }
 
-        else if(gamepad1.x || runtime.seconds()> 118){
+        else if(gamepad1.x ){ //|| runtime.seconds()> 118
             outLift.setTargetPosition(1970);
             outLift.setPower(0.9);
 
@@ -183,6 +183,9 @@ public class hopefullyRight extends OpMode {
                                          //spin paddles
         if(gamepad1.left_bumper){
             paddles.setPower(.9);
+        }
+        else if (gamepad1.left_trigger > 0){
+            paddles.setPower(-.7);
         }
         else{
             paddles.setPower(0.0);
